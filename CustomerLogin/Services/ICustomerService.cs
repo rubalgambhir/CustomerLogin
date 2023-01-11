@@ -5,6 +5,10 @@ namespace CustomerLogin.Services
 {
     public interface ICustomerService
     {
-        Customer GetAllCustomerData();
+        // Customer GetAllCustomerData();
+        IEnumerable<Customer> GetAllCustomerData();
+        Customer AddCustomer(Customer newCustomer);
+       // Customer GetByEmail(string email);
+        //void Remove(string email);
     }
 }

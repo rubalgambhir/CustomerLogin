@@ -1,5 +1,9 @@
-﻿using CustomerLogin.Models;
+﻿using System.Text.Json.Serialization.Metadata;
+using System.Web.Mvc;
+//using System.Web.Mvc;
+using CustomerLogin.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace CustomerLogin.Services
 {
@@ -18,53 +22,82 @@ namespace CustomerLogin.Services
         //{
 
         //}
-        public Customer GetAllCustomerData() //
+        private readonly List<Customer> _customerData;
+        public CustomerService()
         {
-            return new Customer()
+            _customerData = new List<Customer>()
             {
-             
-                Name = "James Miller",
-                Email = "James.miller@gmail.com",
-               Password="JMiller123"
+                new Customer() { Name =  "Jen Ken", Email="Jen.Ken@gmail.com", Password = "Hello123"},
+                new Customer() { Name =  "Tim Ray ", Email="Tim.Ray@gmail.com", Password = "tm1233"},
+                new Customer() { Name =  "Ricky Sam", Email="Rick.sam@gmail.com", Password = "rs1233"}
             };
         }
 
-        public Customer GetCustomerByEmail(string email) //
+        public IEnumerable<Customer> GetAllCustomerData()
         {
-            if (email == "James.miller@gmai.com")
-            {
-                return new Customer
-                {
+            return _customerData;
+        }
 
-                    Name = "James Miller",
-                    Email = "James.miller@gmail.com",
-                    Password = "JMiller123"
+        public Customer AddCustomer(Customer newItem)
+        {
+            //newItem.Email = "James.Miller@gmail.com";
+            //newItem.Password = "Jm@gmail.com";
+            //newItem.Name = "James Miller";
+            //if (newItem.Name.Equals(null))
+            //{
+            //    return Exception;
+            //}
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
-                };
-            }
+            //if (ModelState["Birthday"].Errors.Count != 0)
+            //{
+            //    ModelState.AddModelError("test", "The format of DATETIME is not well ");
+            //}
 
-            return null;
+            _customerData.Add(newItem);
+            return newItem;
         }
 
 
-      
-        //public Customer AddCustomer(Customer customer) //
+        public Customer GetCustomerByEmail(string email) //
+        {
+           //if (email == "James.miller@gmai.com")
+           // {
+            //    return new Customer
+            //    {
+
+            //        Name = "James Miller",
+            //        Email = "James.miller@gmail.com",
+            //        Password = "JMiller123"
+
+            //    };
+            //}
+
+            //return null;
+            return _customerData.Where(a => a.Email == email).FirstOrDefault();
+        }
+
+        //public void Remove(string email) //LATER
         //{
-        //    if (id == 1234)
-        //    {
-        //        return new Customer
-        //        {
-        //            CustomerAddress = "1111 W rd",
-
-        //            CustomerId = 3333,
-        //            CustomerName = "Rick",
-        //            age = 20
-
-        //        };
-        //    }
-
-        //    return null;
+        //    var existing = _customerData.First(a => a.Email == email);
+        //    _customerData.Remove(existing);
         //}
+
+
+        //public Customer GetAllCustomerData() //
+        //{
+        //    return new Customer()
+        //    {
+
+        //        Name = "James Miller",
+        //        Email = "James.miller@gmail.com",
+        //       Password="JMiller123"
+        //    };
+        //}
+
     }
 
 }

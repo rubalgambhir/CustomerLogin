@@ -25,14 +25,19 @@ namespace CustomerLogin.Controllers
     //[Microsoft.AspNetCore.Components.Route("[controller]")]
     public class CustomersController : ControllerBase
     {
-        private ICustomerService serviceprovider;
+          private readonly ICustomerService _serviceprovider;
 
-        public ICustomerService Serviceprovider
 
+        public CustomersController(ICustomerService service)
         {
-            protected get { return serviceprovider; }
-            set { serviceprovider = value; }
+            _serviceprovider = service;
         }
+        //public ICustomerService Serviceprovider
+
+        //{
+        //    protected get { return serviceprovider; }
+        //    set { serviceprovider = value; }
+        //}
         //[Route("/")]
         // [Route("GetAllCustomers")]
         // [Route("Customers/GetAllCustomers")]
@@ -69,14 +74,15 @@ namespace CustomerLogin.Controllers
         }
 
 
-        
+
 
         [HttpPost]
         public void AddCustomer(Models.Customer customer)
         {
-            // try
-            // {
-            SqlConnection myConnection = new SqlConnection();
+           
+        
+
+        SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["DefaultConnection"];
             SqlCommand sqlCmd = new SqlCommand();
             sqlCmd.CommandType = CommandType.Text;
@@ -92,8 +98,42 @@ namespace CustomerLogin.Controllers
         }
 
 
+        [HttpGet]
+        [ActionName("GetCustomerByEmail")]
+        public Customer GetCustomersById(string email)
+        {
+            //return listEmp.First(e => e.ID == id);
+            SqlDataReader reader = null;
+            SqlConnection myConnection = new SqlConnection();
+
+            myConnection.ConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["DefaultConnection"];
+
+            SqlCommand sqlCmd = new SqlCommand();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.CommandText = "Select * from CustomerLogin where Email="+"'"+email+"'"+"";// "Select * from Customer where age=" + Age + "";
+            //sqlCmd.Parameters.Add("@Email", email);
+
+            sqlCmd.Connection = myConnection;
+            myConnection.Open();
+            reader = sqlCmd.ExecuteReader();
+            Customer cust = null;
+            while (reader.Read())
+            {
+                cust = new Customer();
+               
+                cust.Name = reader.GetValue(1).ToString();
+                cust.Email = reader.GetValue(2).ToString();
+                cust.Password = reader.GetValue(3).ToString();
+                // emp.ManagerId = Convert.ToInt32(reader.GetValue(2));
+            }
+            return cust;
+            myConnection.Close();
+
+        }
 
 
 
     }
+
+
 }
